@@ -21,14 +21,30 @@ def st(strategy, cls):
     return strategy.filter(validate(cls))
 
 bools = hs.booleans()
-signed_bytes = st(hs.integers(at.SignedByte.MIN, at.SignedByte.MAX), at.SignedByte)
-unsigned_bytes = st(hs.integers(at.UnsignedByte.MIN, at.UnsignedByte.MAX), at.UnsignedByte)
-signed_shorts = st(hs.integers(at.SignedShort.MIN, at.SignedShort.MAX), at.SignedShort)
-unsigned_shorts = st(hs.integers(at.UnsignedShort.MIN, at.UnsignedShort.MAX), at.UnsignedShort)
-signed_longs = st(hs.integers(at.SignedLong.MIN, at.SignedLong.MAX), at.SignedLong)
-unsigned_longs = st(hs.integers(at.UnsignedLong.MIN, at.UnsignedLong.MAX), at.UnsignedLong)
-signed_long_longs = st(hs.integers(at.SignedLongLong.MIN, at.SignedLongLong.MAX), at.SignedLongLong)
-unsigned_long_longs = st(hs.integers(at.UnsignedLongLong.MIN, at.UnsignedLongLong.MAX), at.UnsignedLongLong)
+signed_bytes = hs.integers(at.SignedByte.MIN, at.SignedByte.MAX)
+not_signed_bytes = hs.integers(min_value=at.SignedByte.MAX+1) | hs.integers(max_value=at.SignedByte.MIN-1)
+
+unsigned_bytes = hs.integers(at.UnsignedByte.MIN, at.UnsignedByte.MAX)
+not_unsigned_bytes = hs.integers(min_value=at.UnsignedByte.MAX+1) | hs.integers(max_value=at.UnsignedByte.MIN-1)
+
+signed_shorts = hs.integers(at.SignedShort.MIN, at.SignedShort.MAX)
+not_signed_shorts = hs.integers(min_value=at.SignedShort.MAX+1) | hs.integers(max_value=at.SignedShort.MIN-1)
+
+unsigned_shorts = hs.integers(at.UnsignedShort.MIN, at.UnsignedShort.MAX)
+not_unsigned_shorts = hs.integers(min_value=at.UnsignedShort.MAX+1) | hs.integers(max_value=at.UnsignedShort.MIN-1)
+
+signed_longs = hs.integers(at.SignedLong.MIN, at.SignedLong.MAX)
+not_signed_longs = hs.integers(min_value=at.SignedLong.MAX+1) | hs.integers(max_value=at.SignedLong.MIN-1)
+
+unsigned_longs = hs.integers(at.UnsignedLong.MIN, at.UnsignedLong.MAX)
+not_unsigned_longs = hs.integers(min_value=at.UnsignedLong.MAX+1) | hs.integers(max_value=at.UnsignedLong.MIN-1)
+
+signed_long_longs = hs.integers(at.SignedLongLong.MIN, at.SignedLongLong.MAX)
+not_signed_long_longs = hs.integers(min_value=at.SignedLongLong.MAX+1) | hs.integers(max_value=at.SignedLongLong.MIN-1)
+
+unsigned_long_longs = hs.integers(at.UnsignedLongLong.MIN, at.UnsignedLongLong.MAX)
+not_unsigned_long_longs = hs.integers(min_value=at.UnsignedLongLong.MAX+1) | hs.integers(max_value=at.UnsignedLongLong.MIN-1)
+
 floats = st(hs.floats(), at.Float)
 doubles = st(hs.floats(), at.Double)
 decimals = st(hs.decimals(), at.Decimal)
