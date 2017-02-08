@@ -29,6 +29,8 @@ class Method:
 
         self.values = collections.OrderedDict()
         for (name, amqptype), value in zip(self.field_info, values):
+            if name == 'global':
+                name = 'global_'
             if value is None:
                 value = amqptype()
             else:

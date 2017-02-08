@@ -1,5 +1,7 @@
 import io
 
+import pytest
+
 import amqpframe.frames as af
 
 
@@ -7,7 +9,7 @@ def test_HeaderFrame_can_be_packed_unpacked():
     DATA = b'AMQP\x00\x00\x09\x01'
 
     stream = io.BytesIO(DATA)
-    frame = af.ProtocolHeaderFrame.from_bytestream(stream)
+    frame = af.Frame.from_bytestream(stream)
 
     assert frame.channel_id is None
     assert frame.payload.protocol_major == 0
@@ -32,3 +34,15 @@ def test_HeartbeatFrame_can_be_packed_unpacked():
     stream = io.BytesIO()
     frame.to_bytestream(stream)
     assert stream.getvalue() == DATA
+
+
+@pytest.mark.parametrize('data', [
+    # Incomplete data
+    b'\x08\x00\x00\x00\x00\x00\x04\x00',
+    # Wrong frame end
+    b'\x08\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\xae',
+])
+def test_parsing_malformed_frame_raises_ValueError(data):
+    stream = io.BytesIO(data)
+    with pytest.raises(ValueError):
+        frame = af.Frame.from_bytestream(stream)

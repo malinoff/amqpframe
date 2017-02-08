@@ -66,7 +66,13 @@ class BaseType:
     @classmethod
     def unpack(cls, stream: io.BytesIO):
         raw = stream.read(cls._STRUCT_SIZE)
-        return struct.unpack('!' + cls._STRUCT_FMT, raw)[0], cls._STRUCT_SIZE
+        try:
+            value = struct.unpack('!' + cls._STRUCT_FMT, raw)[0]
+        except struct.error:
+            raise ValueError('Cannot unpack value of type {} from {!r}'.format(
+                cls.__name__, raw,
+            ))
+        return value, cls._STRUCT_SIZE
 
     def to_bytestream(self, stream: io.BytesIO):
         stream.write(self.pack())
@@ -81,8 +87,10 @@ class BaseType:
 
 
 class Bool(BaseType):
-
     TABLE_LABEL = b't'
+
+    _STRUCT_FMT = '?'
+    _STRUCT_SIZE = 1
 
     def __init__(self, value=False):
         self._value = bool(value)
@@ -93,10 +101,6 @@ class Bool(BaseType):
     # damn you AMQP creators who decided to save a couple of bytes ;(
     def pack(self):
         return struct.pack('!?', self._value)
-
-    @classmethod
-    def unpack(cls, stream):
-        return struct.unpack('!?', stream.read(1))[0], 1
 
     @classmethod
     def pack_many(cls, values):
@@ -401,6 +405,8 @@ class ShortStr(BaseType, bytes):
     def unpack(cls, stream: io.BytesIO):
         str_len, consumed = UnsignedByte.unpack(stream)
         value = stream.read(str_len)
+        if len(value) != str_len:
+            raise ValueError('ShortStr length does not equal to read length')
         return cls(value), consumed + str_len
 
 Shortstr = ShortStr
@@ -432,7 +438,8 @@ class LongStr(BaseType, bytes):
     def unpack(cls, stream: io.BytesIO):
         str_len, consumed = UnsignedLong.unpack(stream)
         value = stream.read(str_len)
-        assert len(value) == str_len
+        if len(value) != str_len:
+            raise ValueError('LongStr length does not equal to read length')
         return cls(value), consumed + str_len
 
 Longstr = LongStr
@@ -482,7 +489,8 @@ class ByteArray(BaseType, bytes):
     def unpack(cls, stream: io.BytesIO):
         str_len, consumed = UnsignedLong.unpack(stream)
         value = stream.read(str_len)
-        assert len(value) == str_len
+        if len(value) != str_len:
+            raise ValueError('ByteArray length does not equal to read length')
         return cls(value), consumed + str_len
 
 
@@ -520,9 +528,9 @@ class Table(BaseType, collections.abc.MutableMapping):
     TABLE_LABEL = b'F'
 
     def __init__(self, *args, **kwargs):
-        value = dict(*args, **kwargs)
+        value = collections.OrderedDict(*args, **kwargs)
 
-        validated = {}
+        validated = collections.OrderedDict()
         for key, value in value.items():
             if not isinstance(key, ShortStr):
                 key = ShortStr(key)
@@ -543,7 +551,7 @@ class Table(BaseType, collections.abc.MutableMapping):
 
     @classmethod
     def unpack(cls, stream: io.BytesIO):
-        result = {}
+        result = collections.OrderedDict()
         table_len, initial = UnsignedLong.unpack(stream)
         consumed = initial
 

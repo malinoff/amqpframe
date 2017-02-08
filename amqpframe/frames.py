@@ -65,7 +65,10 @@ class Frame:
         payload_bytes = types.ByteArray.from_bytestream(stream)
         end = types.UnsignedByte.from_bytestream(stream)
         # Fail fast if `end` is not what we expect
-        assert end == FRAME_END
+        if end != FRAME_END:
+            raise ValueError('Frame end, got {!r} expected {!r}'.format(
+                end, FRAME_END
+            ))
 
         frame_cls = FRAMES[frame_type]
         payload_stream = io.BytesIO(payload_bytes)
@@ -87,6 +90,10 @@ class Frame:
         stream.write(buf.getvalue())
         types.UnsignedByte(FRAME_END).to_bytestream(stream)
 
+    def __eq__(self, other):
+        return (self.channel_id == other.channel_id and
+                self.payload == other.payload)
+
 
 class Payload:
     """Base class for all payload classes."""
@@ -98,6 +105,9 @@ class Payload:
 
     def to_bytestream(self, stream: io.BytesIO):
         """Serialize the payload to the byte stream."""
+        raise NotImplementedError
+
+    def __eq__(self, other):
         raise NotImplementedError
 
 
@@ -182,6 +192,9 @@ class ContentBodyPayload(Payload):
     def __init__(self, data):
         self.data = data
 
+    def __eq__(self, other):
+        return self.data == other.data
+
     @classmethod
     def from_bytestream(cls, stream, body_chunk_size):
         return cls(stream.read(body_chunk_size))
@@ -202,6 +215,9 @@ class HeartbeatPayload(Payload):
 
     def __init__(self):
         self.data = b''
+
+    def __eq__(self, other):
+        return self.data == other.data
 
     @classmethod
     def from_bytestream(cls, stream: io.BytesIO, body_chunk_size=None):
@@ -230,6 +246,13 @@ class ProtocolHeaderPayload(Payload):
         self.protocol_major = protocol_major
         self.protocol_minor = protocol_minor
         self.protocol_revision = protocol_revision
+
+    def __eq__(self, other):
+        return all(
+            getattr(self, attr) == getattr(other, attr)
+            for attr in
+            ['protocol_major', 'protocol_minor', 'protocol_revision']
+        )
 
     @classmethod
     def from_bytestream(cls, stream: io.BytesIO, body_chunk_size=None):

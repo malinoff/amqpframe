@@ -7,7 +7,7 @@ import hypothesis.strategies as hs
 
 import amqpframe.types as at
 
-from . import strategies
+from amqpframe import test_strategies as strategies
 
 ALL_TYPES = at.BaseType.__subclasses__()
 NUMERIC_TYPES = (
@@ -26,7 +26,6 @@ NUMERIC_TYPES = (
 @h.given(hs.data())
 @pytest.mark.parametrize('type_cls', ALL_TYPES)
 def test_type_instances_can_be_packed_unpacked(type_cls, data):
-
     strategy = strategies.type_to_strategy[type_cls]
     value = type_cls(data.draw(strategy))
 
@@ -36,6 +35,22 @@ def test_type_instances_can_be_packed_unpacked(type_cls, data):
     new = type_cls.from_bytestream(stream)
 
     assert value == new
+
+
+@h.given(hs.data())
+@pytest.mark.parametrize('type_cls', ALL_TYPES)
+def test_type_instances_raise_ValueError_on_parsing_error(type_cls, data):
+    strategy = strategies.type_to_strategy[type_cls]
+    # No parsing happens on Void, no error can be thrown.
+    if type_cls is at.Void:
+        return
+
+    value = type_cls(data.draw(strategy))
+
+    stream = io.BytesIO()
+
+    with pytest.raises(ValueError):
+        type_cls.from_bytestream(stream)
 
 
 @h.given(hs.data())
@@ -56,6 +71,11 @@ def test_numeric_type_instances_can_be_compared(data):
     second = data.draw(hs.sampled_from(NUMERIC_TYPES))()
     # We don't actually care if it's True or False
     assert (first < second) in (True, False)
+
+
+#@h.given(hs.data())
+#@pytest.mark.parametrize('type_cls', NUMERIC_TYPES)
+#def test_numeric_type_instances_raise_ValueError_on_overflow(data):
 
 
 def test_strings_can_be_compared():

@@ -7,7 +7,7 @@ import pytest
 import hypothesis as h
 import hypothesis.strategies as hs
 
-from . import strategies
+from amqpframe import test_strategies as strategies
 
 
 @hs.composite
