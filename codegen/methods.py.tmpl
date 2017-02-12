@@ -17,20 +17,20 @@ import io
 import collections
 
 from . import types
-# TODO: find a better way to do this
-# pylint: disable=invalid-name,protected-access
-_recursive_equals = types._recursive_equals
-# pylint: enable=invalid-name,protected-access
 
 
 class Method:
     """Base class for all AMQP methods."""
+
+    content = False
 
     def __init__(self, *values):
         assert len(values) == len(self.field_info)
 
         self.values = collections.OrderedDict()
         for (name, amqptype), value in zip(self.field_info, values):
+            if name == 'global':
+                name = 'global_'
             if value is None:
                 value = amqptype()
             else:
@@ -47,7 +47,7 @@ class Method:
 
         class_id = types.UnsignedShort.from_bytestream(stream)
         method_id = types.UnsignedShort.from_bytestream(stream)
-        method_cls = METHODS[(class_id.value, method_id.value)]
+        method_cls = METHODS[(class_id, method_id)]
 
         kwargs = {}
         bit_names = []
@@ -88,7 +88,7 @@ class Method:
         bits = []
         for value in self.values.values():
             if isinstance(value, types.Bool):
-                bits.append(value.value)
+                bits.append(value)
             else:
                 if bits:
                     types.Bool.many_to_bytestream(bits, stream)
@@ -108,7 +108,7 @@ class Method:
 
     def __eq__(self, other):
         return (self.method_type == other.method_type and
-                _recursive_equals(self.values, other.values))
+                self.values == other.values)
 
     def __repr__(self):
         return '<{}: {}>'.format(self.__class__.__name__,
@@ -116,7 +116,7 @@ class Method:
                                           for k, v in self.values.items()))
 
 
-{% for name, doc, type, fields, synchronous in methods %}
+{% for name, doc, type, fields, synchronous, content in methods %}
 class {{ name }}(Method):
     """{{ doc }}
     """
@@ -127,12 +127,13 @@ class {{ name }}(Method):
 {% else %}
     field_info = (
 {% for name, type in fields.items() %}
-        ("{{ name }}", types.{{ type }}),
+        ('{{ name }}', types.{{ type }}),
 {% endfor %}
     )
 {% endif %}
 
     synchronous = {{ synchronous }}
+    content = {{ content }}
 {% if fields %}
 
     def __init__(self, *,
@@ -160,7 +161,7 @@ class {{ name }}(Method):
 {% endfor %}
 # Method type -> class dispatch table
 METHODS = {
-{% for name, _, type, _, _ in methods %}
+{% for name, _, type, _, _, _ in methods %}
     {{ type }}: {{ name }},
 {% endfor %}
 }

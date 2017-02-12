@@ -4,7 +4,7 @@ amqpframe.errors
 
 AMQP errors classes.
 
-This file was generated 2016-08-29 from
+This file was generated 2017-02-12 from
 /codegen/amqp0-9-1.extended.xml.
 
 """
@@ -12,29 +12,55 @@ This file was generated 2016-08-29 from
 # pylint: disable=redefined-builtin
 
 
-class Error(Exception):
+class AMQPError(Exception):
     """Base class for all AMQP errors."""
-    code = None
+
+    reply_code = None
+    soft = None
+
+    def __init__(self, reply_text, class_id, method_id):
+        super().__init__()
+        if isinstance(reply_text, str):
+            reply_text = reply_text.encode('utf-8')
+        self.reply_text = reply_text
+        self.class_id = class_id
+        self.method_id = method_id
+
+    def __str__(self):
+        soft = 'Soft' if self.soft else 'Hard'
+        return '{} AMQP error: {} ({})'.format(
+            soft, self.reply_text, self.reply_code
+        )
+
+    def __repr__(self):
+        return '<AMQPError: {}, {}, {}>'.format(
+            self.reply_code, self.class_id, self.method_id
+        )
 
 
-class SoftError(Error):
+class SoftError(AMQPError):
     """Soft errors are recoverable which means if such error happens,
     only the channel where the error happened closes, other channels
     can continue to operate.
     """
 
+    soft = True
 
-class HardError(Error):
+
+class HardError(AMQPError):
     """Hard errors are not recoverable which means if such error happens,
     the whole connection must be closed as soon as possible.
     """
+
+    soft = False
 
 
 class ContentTooLarge(SoftError):
     """The client attempted to transfer content larger than the server could
     accept at the present time. The client may retry at a later time.
     """
-    code = 311
+
+    reply_code = 311
 
 
 class NoConsumers(SoftError):
@@ -42,61 +68,70 @@ class NoConsumers(SoftError):
     is set. As a result of pending data on the queue or the absence of any
     consumers of the queue.
     """
-    code = 313
+
+    reply_code = 313
 
 
 class ConnectionForced(HardError):
     """An operator intervened to close the connection for some reason. The
     client may retry at some later date.
     """
-    code = 320
+
+    reply_code = 320
 
 
 class InvalidPath(HardError):
     """The client tried to work with an unknown virtual host.
     """
-    code = 402
+
+    reply_code = 402
 
 
 class AccessRefused(SoftError):
     """The client attempted to work with a server entity to which it has no
     access due to security settings.
     """
-    code = 403
+
+    reply_code = 403
 
 
 class NotFound(SoftError):
     """The client attempted to work with a server entity that does not exist.
     """
-    code = 404
+
+    reply_code = 404
 
 
 class ResourceLocked(SoftError):
     """The client attempted to work with a server entity to which it has no
     access because another client is working with it.
     """
-    code = 405
+
+    reply_code = 405
 
 
 class PreconditionFailed(SoftError):
     """The client requested a method that was not allowed because some
     precondition failed.
     """
-    code = 406
+
+    reply_code = 406
 
 
 class FrameError(HardError):
     """The sender sent a malformed frame that the recipient could not decode.
     This strongly implies a programming error in the sending peer.
     """
-    code = 501
+
+    reply_code = 501
 
 
 class SyntaxError(HardError):
     """The sender sent a frame that contained illegal values for one or more
     fields. This strongly implies a programming error in the sending peer.
     """
-    code = 502
+
+    reply_code = 502
 
 
 class CommandInvalid(HardError):
@@ -104,14 +139,16 @@ class CommandInvalid(HardError):
     operation that was considered invalid by the server. This usually implies a
     programming error in the client.
     """
-    code = 503
+
+    reply_code = 503
 
 
 class ChannelError(HardError):
     """The client attempted to work with a channel that had not been correctly
     opened. This most likely indicates a fault in the client layer.
     """
-    code = 504
+
+    reply_code = 504
 
 
 class UnexpectedFrame(HardError):
@@ -119,7 +156,8 @@ class UnexpectedFrame(HardError):
     a content header and body. This strongly indicates a fault in the peer's
     content processing.
     """
-    code = 505
+
+    reply_code = 505
 
 
 class ResourceError(HardError):
@@ -127,7 +165,8 @@ class ResourceError(HardError):
     resources. This may be due to the client creating too many of some type of
     entity.
     """
-    code = 506
+
+    reply_code = 506
 
 
 class NotAllowed(HardError):
@@ -135,14 +174,16 @@ class NotAllowed(HardError):
     prohibited by the server, due to security settings or by some other
     criteria.
     """
-    code = 530
+
+    reply_code = 530
 
 
 class NotImplemented(HardError):
     """The client tried to use functionality that is not implemented in the
     server.
     """
-    code = 540
+
+    reply_code = 540
 
 
 class InternalError(HardError):
@@ -150,4 +191,5 @@ class InternalError(HardError):
     The server may require intervention by an operator in order to resume
     normal operations.
     """
-    code = 541
+
+    reply_code = 541

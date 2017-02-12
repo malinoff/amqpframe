@@ -34,15 +34,13 @@ class DeliveryMode(enum.Enum):
     Persistent = 2
 
 
-_omit = object()
-
-
 class Message:
     """Basic message."""
 
+    DeliveryMode = DeliveryMode
     PROPERTIES = PROPERTIES
 
-    # pylint: disable=unused-variable,too-many-locals
+    # pylint: disable=unused-variable,too-many-locals,redefined-builtin
     def __init__(self, body=b'', *,
                  delivery_info: dict=None,
                  body_size: int=None,
@@ -70,6 +68,8 @@ class Message:
         self.delivery_info = delivery_info
 
         self.body = body
+        if body_size is None:
+            body_size = len(body)
         self.body_size = body_size
 
         self.properties = collections.OrderedDict((
@@ -87,6 +87,12 @@ class Message:
             ('user_id', user_id),
             ('app_id', app_id),
         ))
+        for key in self.properties:
+            value = self.properties[key]
+            if not isinstance(value, types.BaseType) and value is not None:
+                value = self.PROPERTIES[key](value)
+                self.properties[key] = value
+
         self.__dict__.update(**self.properties)
     # pylint: enable=unused-variable,too-many-locals
 
@@ -94,5 +100,6 @@ class Message:
     def decoded_body(self):
         body = self.body
         if isinstance(body, bytes):
+            # pylint: disable=no-member
             body = body.decode(self.content_encoding)
         return body

@@ -16,9 +16,9 @@ def get_methods(tree):
     classes = get_classes(tree)
     methods = []
     for cname, (cid, cmethods) in classes.items():
-        for mname, (mid, mfields, msupport, synchronous, mdoc) in cmethods.items():  # noqa
+        for mname, (mid, mfields, msupport, synchronous, content, mdoc) in cmethods.items():  # noqa
             name = cname + mname
-            methods.append((name, mdoc, (cid, mid), mfields, synchronous))
+            methods.append((name, mdoc, (cid, mid), mfields, synchronous, content))
     return methods
 
 
@@ -63,6 +63,7 @@ def get_classes(tree):
 
             doc = build_docstring(method_elem, fields)
             synchronous = 'synchronous' in method_elem.attrib
+            content = 'content' in method_elem.attrib
 
             method_id = int(method_elem.attrib['index'])
             method_name = (method_elem.attrib['name']
@@ -71,7 +72,7 @@ def get_classes(tree):
                            .replace('-empty', 'Empty')
                            .replace('-async', 'Async'))
             class_methods[method_name] = (method_id, fields, method_support,
-                                          synchronous, doc)
+                                          synchronous, content, doc)
 
         class_id = int(class_elem.attrib['index'])
         classes[class_elem.attrib['name'].capitalize()] = (class_id,

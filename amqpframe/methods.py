@@ -4,7 +4,7 @@ amqpframe.methods
 
 Implementation of AMQP methods.
 
-This file was generated 2016-08-29 from
+This file was generated 2017-02-12 from
 /codegen/amqp0-9-1.extended.xml.
 
 """
@@ -131,14 +131,15 @@ class ConnectionStart(Method):
     method_type = (10, 10)
 
     field_info = (
-        ("version_major", types.Octet),
-        ("version_minor", types.Octet),
-        ("server_properties", types.Table),
-        ("mechanisms", types.Longstr),
-        ("locales", types.Longstr),
+        ('version_major', types.Octet),
+        ('version_minor', types.Octet),
+        ('server_properties', types.Table),
+        ('mechanisms', types.Longstr),
+        ('locales', types.Longstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  version_major,
@@ -167,13 +168,14 @@ class ConnectionStartOK(Method):
     method_type = (10, 11)
 
     field_info = (
-        ("client_properties", types.Table),
-        ("mechanism", types.Shortstr),
-        ("response", types.Longstr),
-        ("locale", types.Shortstr),
+        ('client_properties', types.Table),
+        ('mechanism', types.Shortstr),
+        ('response', types.Longstr),
+        ('locale', types.Shortstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  client_properties,
@@ -199,10 +201,11 @@ class ConnectionSecure(Method):
     method_type = (10, 20)
 
     field_info = (
-        ("challenge", types.Longstr),
+        ('challenge', types.Longstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  challenge):
@@ -221,10 +224,11 @@ class ConnectionSecureOK(Method):
     method_type = (10, 21)
 
     field_info = (
-        ("response", types.Longstr),
+        ('response', types.Longstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  response):
@@ -245,12 +249,13 @@ class ConnectionTune(Method):
     method_type = (10, 30)
 
     field_info = (
-        ("channel_max", types.Short),
-        ("frame_max", types.Long),
-        ("heartbeat", types.Short),
+        ('channel_max', types.Short),
+        ('frame_max', types.Long),
+        ('heartbeat', types.Short),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  channel_max,
@@ -276,12 +281,13 @@ class ConnectionTuneOK(Method):
     method_type = (10, 31)
 
     field_info = (
-        ("channel_max", types.Short),
-        ("frame_max", types.Long),
-        ("heartbeat", types.Short),
+        ('channel_max', types.Short),
+        ('frame_max', types.Long),
+        ('heartbeat', types.Short),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  channel_max,
@@ -309,12 +315,13 @@ class ConnectionOpen(Method):
     method_type = (10, 40)
 
     field_info = (
-        ("virtual_host", types.Shortstr),
-        ("reserved_1", types.Shortstr),
-        ("reserved_2", types.Bit),
+        ('virtual_host', types.Shortstr),
+        ('reserved_1', types.Shortstr),
+        ('reserved_2', types.Bit),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  virtual_host,
@@ -336,10 +343,11 @@ class ConnectionOpenOK(Method):
     method_type = (10, 41)
 
     field_info = (
-        ("reserved_1", types.Shortstr),
+        ('reserved_1', types.Shortstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None):
@@ -364,13 +372,14 @@ class ConnectionClose(Method):
     method_type = (10, 50)
 
     field_info = (
-        ("reply_code", types.Short),
-        ("reply_text", types.Shortstr),
-        ("class_id", types.Short),
-        ("method_id", types.Short),
+        ('reply_code', types.Short),
+        ('reply_text', types.Shortstr),
+        ('class_id', types.Short),
+        ('method_id', types.Short),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reply_code,
@@ -395,6 +404,7 @@ class ConnectionCloseOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class ChannelOpen(Method):
@@ -406,10 +416,11 @@ class ChannelOpen(Method):
     method_type = (20, 10)
 
     field_info = (
-        ("reserved_1", types.Shortstr),
+        ('reserved_1', types.Shortstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None):
@@ -427,10 +438,11 @@ class ChannelOpenOK(Method):
     method_type = (20, 11)
 
     field_info = (
-        ("reserved_1", types.Longstr),
+        ('reserved_1', types.Longstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None):
@@ -453,10 +465,11 @@ class ChannelFlow(Method):
     method_type = (20, 20)
 
     field_info = (
-        ("active", types.Bit),
+        ('active', types.Bit),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  active):
@@ -474,10 +487,11 @@ class ChannelFlowOK(Method):
     method_type = (20, 21)
 
     field_info = (
-        ("active", types.Bit),
+        ('active', types.Bit),
     )
 
     synchronous = False
+    content = False
 
     def __init__(self, *,
                  active):
@@ -502,13 +516,14 @@ class ChannelClose(Method):
     method_type = (20, 40)
 
     field_info = (
-        ("reply_code", types.Short),
-        ("reply_text", types.Shortstr),
-        ("class_id", types.Short),
-        ("method_id", types.Short),
+        ('reply_code', types.Short),
+        ('reply_text', types.Shortstr),
+        ('class_id', types.Short),
+        ('method_id', types.Short),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reply_code,
@@ -532,6 +547,7 @@ class ChannelCloseOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class ExchangeDeclare(Method):
@@ -552,18 +568,19 @@ class ExchangeDeclare(Method):
     method_type = (40, 10)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("exchange", types.Shortstr),
-        ("type", types.Shortstr),
-        ("passive", types.Bit),
-        ("durable", types.Bit),
-        ("auto_delete", types.Bit),
-        ("internal", types.Bit),
-        ("no_wait", types.Bit),
-        ("arguments", types.Table),
+        ('reserved_1', types.Short),
+        ('exchange', types.Shortstr),
+        ('type', types.Shortstr),
+        ('passive', types.Bit),
+        ('durable', types.Bit),
+        ('auto_delete', types.Bit),
+        ('internal', types.Bit),
+        ('no_wait', types.Bit),
+        ('arguments', types.Table),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -597,6 +614,7 @@ class ExchangeDeclareOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class ExchangeDelete(Method):
@@ -612,13 +630,14 @@ class ExchangeDelete(Method):
     method_type = (40, 20)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("exchange", types.Shortstr),
-        ("if_unused", types.Bit),
-        ("no_wait", types.Bit),
+        ('reserved_1', types.Short),
+        ('exchange', types.Shortstr),
+        ('if_unused', types.Bit),
+        ('no_wait', types.Bit),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -641,6 +660,7 @@ class ExchangeDeleteOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class ExchangeBind(Method):
@@ -657,15 +677,16 @@ class ExchangeBind(Method):
     method_type = (40, 30)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("destination", types.Shortstr),
-        ("source", types.Shortstr),
-        ("routing_key", types.Shortstr),
-        ("no_wait", types.Bit),
-        ("arguments", types.Table),
+        ('reserved_1', types.Short),
+        ('destination', types.Shortstr),
+        ('source', types.Shortstr),
+        ('routing_key', types.Shortstr),
+        ('no_wait', types.Bit),
+        ('arguments', types.Table),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -692,6 +713,7 @@ class ExchangeBindOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class ExchangeUnbind(Method):
@@ -708,15 +730,16 @@ class ExchangeUnbind(Method):
     method_type = (40, 40)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("destination", types.Shortstr),
-        ("source", types.Shortstr),
-        ("routing_key", types.Shortstr),
-        ("no_wait", types.Bit),
-        ("arguments", types.Table),
+        ('reserved_1', types.Short),
+        ('destination', types.Shortstr),
+        ('source', types.Shortstr),
+        ('routing_key', types.Shortstr),
+        ('no_wait', types.Bit),
+        ('arguments', types.Table),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -743,6 +766,7 @@ class ExchangeUnbindOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class QueueDeclare(Method):
@@ -763,17 +787,18 @@ class QueueDeclare(Method):
     method_type = (50, 10)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("queue", types.Shortstr),
-        ("passive", types.Bit),
-        ("durable", types.Bit),
-        ("exclusive", types.Bit),
-        ("auto_delete", types.Bit),
-        ("no_wait", types.Bit),
-        ("arguments", types.Table),
+        ('reserved_1', types.Short),
+        ('queue', types.Shortstr),
+        ('passive', types.Bit),
+        ('durable', types.Bit),
+        ('exclusive', types.Bit),
+        ('auto_delete', types.Bit),
+        ('no_wait', types.Bit),
+        ('arguments', types.Table),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -808,12 +833,13 @@ class QueueDeclareOK(Method):
     method_type = (50, 11)
 
     field_info = (
-        ("queue", types.Shortstr),
-        ("message_count", types.Long),
-        ("consumer_count", types.Long),
+        ('queue', types.Shortstr),
+        ('message_count', types.Long),
+        ('consumer_count', types.Long),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  queue,
@@ -843,15 +869,16 @@ class QueueBind(Method):
     method_type = (50, 20)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("queue", types.Shortstr),
-        ("exchange", types.Shortstr),
-        ("routing_key", types.Shortstr),
-        ("no_wait", types.Bit),
-        ("arguments", types.Table),
+        ('reserved_1', types.Short),
+        ('queue', types.Shortstr),
+        ('exchange', types.Shortstr),
+        ('routing_key', types.Shortstr),
+        ('no_wait', types.Bit),
+        ('arguments', types.Table),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -878,6 +905,7 @@ class QueueBindOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class QueueUnbind(Method):
@@ -893,14 +921,15 @@ class QueueUnbind(Method):
     method_type = (50, 50)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("queue", types.Shortstr),
-        ("exchange", types.Shortstr),
-        ("routing_key", types.Shortstr),
-        ("arguments", types.Table),
+        ('reserved_1', types.Short),
+        ('queue', types.Shortstr),
+        ('exchange', types.Shortstr),
+        ('routing_key', types.Shortstr),
+        ('arguments', types.Table),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -925,6 +954,7 @@ class QueueUnbindOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class QueuePurge(Method):
@@ -939,12 +969,13 @@ class QueuePurge(Method):
     method_type = (50, 30)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("queue", types.Shortstr),
-        ("no_wait", types.Bit),
+        ('reserved_1', types.Short),
+        ('queue', types.Shortstr),
+        ('no_wait', types.Bit),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -966,10 +997,11 @@ class QueuePurgeOK(Method):
     method_type = (50, 31)
 
     field_info = (
-        ("message_count", types.Long),
+        ('message_count', types.Long),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  message_count):
@@ -993,14 +1025,15 @@ class QueueDelete(Method):
     method_type = (50, 40)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("queue", types.Shortstr),
-        ("if_unused", types.Bit),
-        ("if_empty", types.Bit),
-        ("no_wait", types.Bit),
+        ('reserved_1', types.Short),
+        ('queue', types.Shortstr),
+        ('if_unused', types.Bit),
+        ('if_empty', types.Bit),
+        ('no_wait', types.Bit),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -1026,10 +1059,11 @@ class QueueDeleteOK(Method):
     method_type = (50, 41)
 
     field_info = (
-        ("message_count", types.Long),
+        ('message_count', types.Long),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  message_count):
@@ -1053,12 +1087,13 @@ class BasicQos(Method):
     method_type = (60, 10)
 
     field_info = (
-        ("prefetch_size", types.Long),
-        ("prefetch_count", types.Short),
-        ("global", types.Bit),
+        ('prefetch_size', types.Long),
+        ('prefetch_count', types.Short),
+        ('global', types.Bit),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  prefetch_size,
@@ -1081,6 +1116,7 @@ class BasicQosOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class BasicConsume(Method):
@@ -1101,17 +1137,18 @@ class BasicConsume(Method):
     method_type = (60, 20)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("queue", types.Shortstr),
-        ("consumer_tag", types.Shortstr),
-        ("no_local", types.Bit),
-        ("no_ack", types.Bit),
-        ("exclusive", types.Bit),
-        ("no_wait", types.Bit),
-        ("arguments", types.Table),
+        ('reserved_1', types.Short),
+        ('queue', types.Shortstr),
+        ('consumer_tag', types.Shortstr),
+        ('no_local', types.Bit),
+        ('no_ack', types.Bit),
+        ('exclusive', types.Bit),
+        ('no_wait', types.Bit),
+        ('arguments', types.Table),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -1144,10 +1181,11 @@ class BasicConsumeOK(Method):
     method_type = (60, 21)
 
     field_info = (
-        ("consumer_tag", types.Shortstr),
+        ('consumer_tag', types.Shortstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  consumer_tag):
@@ -1177,11 +1215,12 @@ class BasicCancel(Method):
     method_type = (60, 30)
 
     field_info = (
-        ("consumer_tag", types.Shortstr),
-        ("no_wait", types.Bit),
+        ('consumer_tag', types.Shortstr),
+        ('no_wait', types.Bit),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  consumer_tag,
@@ -1201,10 +1240,11 @@ class BasicCancelOK(Method):
     method_type = (60, 31)
 
     field_info = (
-        ("consumer_tag", types.Shortstr),
+        ('consumer_tag', types.Shortstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  consumer_tag):
@@ -1229,15 +1269,14 @@ class BasicPublish(Method):
     method_type = (60, 40)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("exchange", types.Shortstr),
-        ("routing_key", types.Shortstr),
-        ("mandatory", types.Bit),
-        ("immediate", types.Bit),
+        ('reserved_1', types.Short),
+        ('exchange', types.Shortstr),
+        ('routing_key', types.Shortstr),
+        ('mandatory', types.Bit),
+        ('immediate', types.Bit),
     )
 
     synchronous = False
-
     content = True
 
     def __init__(self, *,
@@ -1270,14 +1309,13 @@ class BasicReturn(Method):
     method_type = (60, 50)
 
     field_info = (
-        ("reply_code", types.Short),
-        ("reply_text", types.Shortstr),
-        ("exchange", types.Shortstr),
-        ("routing_key", types.Shortstr),
+        ('reply_code', types.Short),
+        ('reply_text', types.Shortstr),
+        ('exchange', types.Shortstr),
+        ('routing_key', types.Shortstr),
     )
 
     synchronous = False
-
     content = True
 
     def __init__(self, *,
@@ -1309,15 +1347,14 @@ class BasicDeliver(Method):
     method_type = (60, 60)
 
     field_info = (
-        ("consumer_tag", types.Shortstr),
-        ("delivery_tag", types.Longlong),
-        ("redelivered", types.Bit),
-        ("exchange", types.Shortstr),
-        ("routing_key", types.Shortstr),
+        ('consumer_tag', types.Shortstr),
+        ('delivery_tag', types.Longlong),
+        ('redelivered', types.Bit),
+        ('exchange', types.Shortstr),
+        ('routing_key', types.Shortstr),
     )
 
     synchronous = False
-
     content = True
 
     def __init__(self, *,
@@ -1348,12 +1385,13 @@ class BasicGet(Method):
     method_type = (60, 70)
 
     field_info = (
-        ("reserved_1", types.Short),
-        ("queue", types.Shortstr),
-        ("no_ack", types.Bit),
+        ('reserved_1', types.Short),
+        ('queue', types.Shortstr),
+        ('no_ack', types.Bit),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None,
@@ -1381,15 +1419,14 @@ class BasicGetOK(Method):
     method_type = (60, 71)
 
     field_info = (
-        ("delivery_tag", types.Longlong),
-        ("redelivered", types.Bit),
-        ("exchange", types.Shortstr),
-        ("routing_key", types.Shortstr),
-        ("message_count", types.Long),
+        ('delivery_tag', types.Longlong),
+        ('redelivered', types.Bit),
+        ('exchange', types.Shortstr),
+        ('routing_key', types.Shortstr),
+        ('message_count', types.Long),
     )
 
     synchronous = True
-
     content = True
 
     def __init__(self, *,
@@ -1417,10 +1454,11 @@ class BasicGetEmpty(Method):
     method_type = (60, 72)
 
     field_info = (
-        ("reserved_1", types.Shortstr),
+        ('reserved_1', types.Shortstr),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  reserved_1=None):
@@ -1443,11 +1481,12 @@ class BasicAck(Method):
     method_type = (60, 80)
 
     field_info = (
-        ("delivery_tag", types.Longlong),
-        ("multiple", types.Bit),
+        ('delivery_tag', types.Longlong),
+        ('multiple', types.Bit),
     )
 
     synchronous = False
+    content = False
 
     def __init__(self, *,
                  delivery_tag,
@@ -1470,11 +1509,12 @@ class BasicReject(Method):
     method_type = (60, 90)
 
     field_info = (
-        ("delivery_tag", types.Longlong),
-        ("requeue", types.Bit),
+        ('delivery_tag', types.Longlong),
+        ('requeue', types.Bit),
     )
 
     synchronous = False
+    content = False
 
     def __init__(self, *,
                  delivery_tag,
@@ -1496,10 +1536,11 @@ class BasicRecoverAsync(Method):
     method_type = (60, 100)
 
     field_info = (
-        ("requeue", types.Bit),
+        ('requeue', types.Bit),
     )
 
     synchronous = False
+    content = False
 
     def __init__(self, *,
                  requeue):
@@ -1519,10 +1560,11 @@ class BasicRecover(Method):
     method_type = (60, 110)
 
     field_info = (
-        ("requeue", types.Bit),
+        ('requeue', types.Bit),
     )
 
     synchronous = False
+    content = False
 
     def __init__(self, *,
                  requeue):
@@ -1539,6 +1581,7 @@ class BasicRecoverOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class BasicNack(Method):
@@ -1557,12 +1600,13 @@ class BasicNack(Method):
     method_type = (60, 120)
 
     field_info = (
-        ("delivery_tag", types.Longlong),
-        ("multiple", types.Bit),
-        ("requeue", types.Bit),
+        ('delivery_tag', types.Longlong),
+        ('multiple', types.Bit),
+        ('requeue', types.Bit),
     )
 
     synchronous = False
+    content = False
 
     def __init__(self, *,
                  delivery_tag,
@@ -1585,6 +1629,7 @@ class TxSelect(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class TxSelectOK(Method):
@@ -1596,6 +1641,7 @@ class TxSelectOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class TxCommit(Method):
@@ -1608,6 +1654,7 @@ class TxCommit(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class TxCommitOK(Method):
@@ -1619,6 +1666,7 @@ class TxCommitOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class TxRollback(Method):
@@ -1633,6 +1681,7 @@ class TxRollback(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class TxRollbackOK(Method):
@@ -1644,6 +1693,7 @@ class TxRollbackOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 class ConfirmSelect(Method):
@@ -1656,10 +1706,11 @@ class ConfirmSelect(Method):
     method_type = (85, 10)
 
     field_info = (
-        ("nowait", types.Bit),
+        ('nowait', types.Bit),
     )
 
     synchronous = True
+    content = False
 
     def __init__(self, *,
                  nowait):
@@ -1677,6 +1728,7 @@ class ConfirmSelectOK(Method):
     field_info = ()
 
     synchronous = True
+    content = False
 
 
 # Method type -> class dispatch table

@@ -149,6 +149,7 @@ class Bool(BaseType):
     def __str__(self):
         return str(self._value)
 
+
 Bit = Bool
 
 
@@ -186,6 +187,7 @@ class UnsignedByte(BaseType, int):
                 value, cls.MIN, cls.MAX
             ))
         return value
+
 
 Octet = UnsignedByte
 
@@ -225,6 +227,7 @@ class UnsignedShort(BaseType, int):
             ))
         return value
 
+
 Short = UnsignedShort
 
 
@@ -262,6 +265,7 @@ class UnsignedLong(BaseType, int):
                 value, cls.MIN, cls.MAX
             ))
         return value
+
 
 Long = UnsignedLong
 
@@ -301,6 +305,7 @@ class UnsignedLongLong(BaseType, int):
                 value, cls.MIN, cls.MAX
             ))
         return value
+
 
 Longlong = UnsignedLongLong
 
@@ -409,6 +414,7 @@ class ShortStr(BaseType, bytes):
             raise ValueError('ShortStr length does not equal to read length')
         return cls(value), consumed + str_len
 
+
 Shortstr = ShortStr
 
 
@@ -441,6 +447,7 @@ class LongStr(BaseType, bytes):
         if len(value) != str_len:
             raise ValueError('LongStr length does not equal to read length')
         return cls(value), consumed + str_len
+
 
 Longstr = LongStr
 

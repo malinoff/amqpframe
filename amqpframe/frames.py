@@ -10,7 +10,6 @@ and have a payload according to the specification, 2.3.5.
 """
 
 import io
-import struct
 
 from . import basic
 from . import types
@@ -39,6 +38,18 @@ class Frame:
 
     payload_cls = None
     """Payload implementation, subclasses must provide this."""
+
+    METADATA_SIZE = (  # frame_type
+        types.UnsignedByte._STRUCT_SIZE +
+        # channel_id
+        types.UnsignedShort._STRUCT_SIZE +
+        # payload_size
+        types.UnsignedLong._STRUCT_SIZE +
+        # frame_end
+        types.UnsignedByte._STRUCT_SIZE)
+    """How many bytes from frame_max size are taken by the metadata:
+    frame type, channel id, payload size and frame end byte.
+    """
 
     def __init__(self, channel_id, payload):
         self.channel_id = channel_id
@@ -183,9 +194,8 @@ class ContentHeaderPayload(Payload):
 class ContentBodyPayload(Payload):
     """Specification 4.2.6.2.
 
-    +-----------------------+ +-----------+
-    | Opaque binary payload | | frame-end |
-    +-----------------------+ +-----------+
+    +-----------------------+ +-----------+ | Opaque binary payload | |
+    frame-end | +-----------------------+ +-----------+
 
     """
 
@@ -206,10 +216,8 @@ class ContentBodyPayload(Payload):
 class HeartbeatPayload(Payload):
     """Specification 4.2.7.
 
-    0     1     2     3           4.
-    +-----+-----+-----+-----------+
-    | 0x8 | 0x0 | 0x0 | frame-end |
-    +-----+-----+-----+-----------+
+    0     1     2     3           4. +-----+-----+-----+-----------+ |
+    0x8 | 0x0 | 0x0 | frame-end | +-----+-----+-----+-----------+
 
     """
 
@@ -230,10 +238,8 @@ class HeartbeatPayload(Payload):
 class ProtocolHeaderPayload(Payload):
     """Specification 4.2.2.
 
-    0   1   2   3   4   5   6   7   8.
-    +---+---+---+---+---+---+---+---+
-    |'A'|'M'|'Q'|'P'| 0 | 0 | 9 | 1 |
-    +---+---+---+---+---+---+---+---+
+    0   1   2   3   4   5   6   7   8. +---+---+---+---+---+---+---+---+
+    |'A'|'M'|'Q'|'P'| 0 | 0 | 9 | 1 | +---+---+---+---+---+---+---+---+
 
     """
 

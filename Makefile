@@ -17,15 +17,18 @@ SPHINX=$(SPHINX_MAKE) SPHINXBUILD=$(SPHINX_BUILD) SOURCEDIR=docs/ BUILDDIR=docs/
 
 .PHONY: codestyle-check
 codestyle-check: codestyle-autoformat
-	$(FLAKE8) --count $(PROJ_NAME)
-	$(PYLINT) $(PROJ_NAME)
+	$(FLAKE8) --count --exclude $(PROJ_NAME)/test_strategies.py \
+					  --exclude $(PROJ_NAME)/errors.py \
+					  --exclude $(PROJ_NAME)/methods.py \
+					  $(PROJ_NAME)
+	$(PYLINT) --ignore-patterns=test_.*,errors,methods $(PROJ_NAME)
 	git diff --exit-code $(PROJ_NAME)
 	echo "Your code is perfectly styled, congratz! :)"
 
 .PHONY: codestyle-autoformat
 codestyle-autoformat: codestyle-deps
 	$(ISORT) -p $(PROJ_NAME) -ls -sl -rc $(PROJ_NAME)
-	$(PYFORMAT) -r -i $(PROJ_NAME)
+	$(PYFORMAT) -r -i --exclude errors.py --exclude methods.py $(PROJ_NAME)
 
 .PHONY: codestyle-deps
 codestyle-deps:
