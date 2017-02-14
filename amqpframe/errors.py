@@ -18,7 +18,7 @@ class AMQPError(Exception):
     reply_code = None
     soft = None
 
-    def __init__(self, reply_text, class_id, method_id):
+    def __init__(self, reply_text, class_id=0, method_id=0):
         super().__init__()
         if isinstance(reply_text, str):
             reply_text = reply_text.encode('utf-8')
@@ -27,7 +27,7 @@ class AMQPError(Exception):
         self.method_id = method_id
 
     def __str__(self):
-        soft = 'Soft' if self.soft else 'Hard'
+        soft = 'soft' if self.soft else 'hard'
         return '{} AMQP error: {} ({})'.format(
             soft, self.reply_text, self.reply_code
         )

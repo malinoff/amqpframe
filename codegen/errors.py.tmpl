@@ -27,7 +27,7 @@ class AMQPError(Exception):
         self.method_id = method_id
 
     def __str__(self):
-        soft = 'Soft' if self.soft else 'Hard'
+        soft = 'soft' if self.soft else 'hard'
         return '{} AMQP error: {} ({})'.format(
             soft, self.reply_text, self.reply_code
         )
