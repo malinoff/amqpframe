@@ -36,7 +36,7 @@ codestyle-deps:
 
 .PHONY: unittests
 unittests: unittests-deps
-	$(PYTEST) -v -l --cov=$(PROJ_NAME) --cov-report=term-missing:skip-covered --cov-fail-under=100 tests/unit
+	$(PYTEST) -v -l --cov=$(PROJ_NAME) --cov-report=term-missing:skip-covered tests/unit
 
 .PHONY: unittests-deps
 unittests-deps:
